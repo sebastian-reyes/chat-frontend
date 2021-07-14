@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Client } from '@stomp/stompjs';
+import * as SockJS from 'sockjs-client';
 
 @Component({
   selector: 'app-chat',
@@ -6,10 +8,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-
+  private client: Client;
   constructor() { }
 
   ngOnInit(): void {
+    this.client = new Client();
+    this.client.webSocketFactory = () => {
+      return new SockJS("http://localhost:9898/chat-websocket");
+    };
+    this.client.onConnect = (frame) => {
+      console.log('Contectados: ' + this.client.connected + ':' + frame);
+    }
+    this.client.activate();
   }
-
 }
