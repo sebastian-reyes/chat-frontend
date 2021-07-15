@@ -27,10 +27,14 @@ export class ChatComponent implements OnInit {
       this.client.subscribe('/chat/mensaje', (e) => {
         let mensaje: Mensaje = JSON.parse(e.body) as Mensaje;
         mensaje.fecha = new Date(mensaje.fecha);
+        if (!this.mensaje.color && mensaje.tipo == "NUEVO_USUARIO"
+          && this.mensaje.username == mensaje.username) {
+          this.mensaje.color = mensaje.color;
+        }
         this.mensajes.push(mensaje);
       });
       this.mensaje.tipo = "NUEVO_USUARIO";
-      this.client.publish({destination: '/app/mensaje', body: JSON.stringify(this.mensaje)});
+      this.client.publish({ destination: '/app/mensaje', body: JSON.stringify(this.mensaje) });
     }
     this.client.onDisconnect = (frame) => {
       console.log('Descontectados: ' + !this.client.connected + ':' + frame)
@@ -48,8 +52,8 @@ export class ChatComponent implements OnInit {
       ruta de prefijo = /app (registry.setApplicationDestinationPrefixes("/app");)
       ruta del broker = /mensaje (@MessageMapping("/mensaje"))
     */
-      this.mensaje.tipo = "MENSAJE";
-    this.client.publish({destination: '/app/mensaje', body: JSON.stringify(this.mensaje)});
-    this.mensaje.texto="";
+    this.mensaje.tipo = "MENSAJE";
+    this.client.publish({ destination: '/app/mensaje', body: JSON.stringify(this.mensaje) });
+    this.mensaje.texto = "";
   }
 }

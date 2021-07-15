@@ -6,7 +6,7 @@
                     <ul class="navbar-nav ms-auto">
                         <div class="nav-item">
                             <input type="text" class="form-control" placeholder="Escribe tu username" name="username"
-                            [(ngModel)]="mensaje.username" *ngIf="!conectado"/>
+                                [(ngModel)]="mensaje.username" *ngIf="!conectado" />
                         </div>
                         <li class="nav-item">
                             <button class="btn btn-success ms-2" type="button" (click)="conectar()" *ngIf="!conectado"
@@ -27,10 +27,13 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item list-group-item-light" *ngFor="let mensaje of mensajes">
                     <span *ngIf="mensaje.tipo == 'NUEVO_USUARIO'">
-                        {{mensaje.fecha | date:'shortTime'}}: {{mensaje.texto}} @{{mensaje.username}}
+                        {{mensaje.fecha | date:'shortTime'}}: {{mensaje.texto}}
+                        <span [ngStyle]="{'color':mensaje.color}">@{{mensaje.username}}</span>
                     </span>
                     <span *ngIf="mensaje.tipo == 'MENSAJE'">
-                        {{mensaje.fecha | date:'shortTime'}}: {{mensaje.username}} dice: <br/> {{mensaje.texto}}
+                        {{mensaje.fecha | date:'shortTime'}}:
+                        <span [ngStyle]="{'color':mensaje.color}">@{{mensaje.username}}</span> dice: <br />
+                        {{mensaje.texto}}
                     </span>
                 </li>
             </ul>
