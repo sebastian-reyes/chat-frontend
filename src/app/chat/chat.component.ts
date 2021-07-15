@@ -9,6 +9,7 @@ import * as SockJS from 'sockjs-client';
 })
 export class ChatComponent implements OnInit {
   private client: Client;
+  conectado: boolean = false;
   constructor() { }
 
   ngOnInit(): void {
@@ -18,7 +19,18 @@ export class ChatComponent implements OnInit {
     };
     this.client.onConnect = (frame) => {
       console.log('Contectados: ' + this.client.connected + ':' + frame);
+      this.conectado = true;
     }
+    this.client.onDisconnect = (frame) => {
+      console.log('Descontectados: ' + !this.client.connected + ':' + frame)
+      this.conectado = false;
+    };
+  }
+  conectar(): void {
     this.client.activate();
+
+  }
+  desconectar(): void {
+    this.client.deactivate();
   }
 }

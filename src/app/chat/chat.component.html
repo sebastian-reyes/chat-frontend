@@ -10,18 +10,24 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-auto">
                             <li class="nav-item me-2">
-                                <button class="btn btn-success mt-2" type="button">Conectar</button>
+                                <button class="btn btn-success mt-2" type="button" (click)="conectar()" 
+                                *ngIf="!conectado">
+                                    Conectar
+                                </button>
                             </li>
                             <li class="nav-item">
-                                <button class="btn btn-danger mt-2" type="button">Cerrar chat</button>
+                                <button class="btn btn-danger mt-2" type="button" (click)="desconectar()"
+                                *ngIf="conectado">
+                                    Cerrar chat
+                                </button>
                             </li>
                         </ul>
                     </div>
                 </div>
             </nav>
         </div>
-        <div class="card-body"></div>
-        <div class="card-footer">
+        <div class="card-body" *ngIf="conectado"></div>
+        <div class="card-footer" *ngIf="conectado">
             <form class="form-inline">
                 <div class="row">
                     <div class="col-lg-10 mt-2 mb-2">
