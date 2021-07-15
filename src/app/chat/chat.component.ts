@@ -29,6 +29,8 @@ export class ChatComponent implements OnInit {
         mensaje.fecha = new Date(mensaje.fecha);
         this.mensajes.push(mensaje);
       });
+      this.mensaje.tipo = "NUEVO_USUARIO";
+      this.client.publish({destination: '/app/mensaje', body: JSON.stringify(this.mensaje)});
     }
     this.client.onDisconnect = (frame) => {
       console.log('Descontectados: ' + !this.client.connected + ':' + frame)
@@ -46,6 +48,7 @@ export class ChatComponent implements OnInit {
       ruta de prefijo = /app (registry.setApplicationDestinationPrefixes("/app");)
       ruta del broker = /mensaje (@MessageMapping("/mensaje"))
     */
+      this.mensaje.tipo = "MENSAJE";
     this.client.publish({destination: '/app/mensaje', body: JSON.stringify(this.mensaje)});
     this.mensaje.texto="";
   }
