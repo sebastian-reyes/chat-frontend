@@ -13,6 +13,7 @@ export class ChatComponent implements OnInit {
   conectado: boolean = false;
   mensaje: Mensaje = new Mensaje();
   mensajes: Mensaje[] = [];
+  escribiendo: string;
 
   constructor() { }
 
@@ -21,9 +22,11 @@ export class ChatComponent implements OnInit {
     this.client.webSocketFactory = () => {
       return new SockJS("http://localhost:9898/chat-websocket");
     };
+
     this.client.onConnect = (frame) => {
       console.log('Contectados: ' + this.client.connected + ':' + frame);
       this.conectado = true;
+
       this.client.subscribe('/chat/mensaje', (e) => {
         let mensaje: Mensaje = JSON.parse(e.body) as Mensaje;
         mensaje.fecha = new Date(mensaje.fecha);
@@ -33,9 +36,16 @@ export class ChatComponent implements OnInit {
         }
         this.mensajes.push(mensaje);
       });
+
+      this.client.subscribe('/chat/escribiendo', (e) => {
+        this.escribiendo = e.body;
+        setTimeout(() => this.escribiendo = '', 3000);
+      });
+
       this.mensaje.tipo = "NUEVO_USUARIO";
       this.client.publish({ destination: '/app/mensaje', body: JSON.stringify(this.mensaje) });
     }
+
     this.client.onDisconnect = (frame) => {
       console.log('Descontectados: ' + !this.client.connected + ':' + frame)
       this.conectado = false;
@@ -55,5 +65,8 @@ export class ChatComponent implements OnInit {
     this.mensaje.tipo = "MENSAJE";
     this.client.publish({ destination: '/app/mensaje', body: JSON.stringify(this.mensaje) });
     this.mensaje.texto = "";
+  }
+  escribiendoEvento(): void {
+    this.client.publish({ destination: '/app/escribiendo', body: this.mensaje.username });
   }
 }

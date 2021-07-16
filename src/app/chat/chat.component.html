@@ -23,7 +23,7 @@
                 </div>
             </nav>
         </div>
-        <div class="card-body" *ngIf="conectado">
+        <div #scrollChat [scrollTop]="scrollChat.scrollHeight" class="card-body" *ngIf="conectado">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item list-group-item-light" *ngFor="let mensaje of mensajes">
                     <span *ngIf="mensaje.tipo == 'NUEVO_USUARIO'">
@@ -39,11 +39,14 @@
             </ul>
         </div>
         <div class="card-footer" *ngIf="conectado">
+            <div>
+                {{escribiendo}}
+            </div>
             <form class="form-inline">
                 <div class="row">
                     <div class="col-lg-10 mt-2 mb-2">
                         <input type="text" class="form-control" placeholder="Escribe un mensaje..." name="texto"
-                            [(ngModel)]="mensaje.texto" />
+                            [(ngModel)]="mensaje.texto" (keyup)="escribiendoEvento()" />
                     </div>
                     <div class="col-lg-2 mt-2 mb-2">
                         <button class="btn btn-primary w-100" type="submit" (click)="enviarMensaje()">
